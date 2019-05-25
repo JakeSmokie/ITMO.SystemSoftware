@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SSoft")]
+[assembly: AssemblyTitle("SSoft.Lab06")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SSoft")]
+[assembly: AssemblyProduct("SSoft.Lab06")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("24fdab5e-0d68-49eb-954e-b1048b3603c1")]
+[assembly: Guid("97f76dd0-a32e-45f5-94af-d69184445ad1")]
 
 // Version information for an assembly consists of the following four values:
 //

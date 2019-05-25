@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{24FDAB5E-0D68-49EB-954E-B1048B3603C1}</ProjectGuid>
+    <ProjectGuid>{9B9FDAF3-6A25-4ACF-B703-692CFF48984C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SSoft</RootNamespace>
-    <AssemblyName>SSoft</AssemblyName>
+    <RootNamespace>SSoft.Lab03</RootNamespace>
+    <AssemblyName>SSoft.Lab03</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,11 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lab01.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SSoft.Lab02\SSoft.Lab02.csproj">
+      <Project>{fc2599a4-3c1e-401f-a476-c89115768ac2}</Project>
+      <Name>SSoft.Lab02</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SSoft\SSoft.csproj">
+      <Project>{24fdab5e-0d68-49eb-954e-b1048b3603c1}</Project>
+      <Name>SSoft</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

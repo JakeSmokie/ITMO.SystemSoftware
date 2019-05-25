@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{24FDAB5E-0D68-49EB-954E-B1048B3603C1}</ProjectGuid>
+    <ProjectGuid>{10AC1ABC-1DA0-4BDA-9A0B-98B91EDFDE4F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SSoft</RootNamespace>
-    <AssemblyName>SSoft</AssemblyName>
+    <RootNamespace>SSoft.Lab04</RootNamespace>
+    <AssemblyName>SSoft.Lab04</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lab01.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

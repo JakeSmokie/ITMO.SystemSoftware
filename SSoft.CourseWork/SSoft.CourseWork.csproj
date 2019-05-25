@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{24FDAB5E-0D68-49EB-954E-B1048B3603C1}</ProjectGuid>
+    <ProjectGuid>{D2475DFA-2193-42F0-B2FF-37ED4AAA8739}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SSoft</RootNamespace>
-    <AssemblyName>SSoft</AssemblyName>
+    <RootNamespace>SSoft.CourseWork</RootNamespace>
+    <AssemblyName>SSoft.CourseWork</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lab01.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleHybridLock.cs" />
+    <Compile Include="SimpleSpinLock.cs" />
+    <Compile Include="SimpleWaitLock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
