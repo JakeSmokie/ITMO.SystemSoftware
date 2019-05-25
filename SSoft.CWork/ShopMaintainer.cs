@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SSoft.CWork.Tools;
 
 namespace SSoft.CWork {
     public class Request {
@@ -15,60 +17,82 @@ namespace SSoft.CWork {
         }
     }
 
-    public class ShopMaintainer : IDisposable {
-        private readonly ShopContext _context = new ShopContext();
+    public class ShopMaintainer : IEnumerable<Product> {
         private readonly Syncer _syncer;
-
-        public Queue<Request> Requests { get; } = new Queue<Request>();
+        private readonly List<Product> _products = new List<Product>();
 
         public ShopMaintainer(Syncer syncer) {
             _syncer = syncer;
         }
 
-        public void Dispose() {
-            _context?.Dispose();
+        public void Add(Product product) {
+            _products.Add(product);
         }
 
-        public void Run() {
-            while (true) {
-                while (AnyRequests()) {
-                    _syncer.Enter();
-                    var (amount, article, action) = Requests.Dequeue();
+        public void SellItems(Client client) {
+            while (client.Cash > 0 && _products.Any(x => _syncer.Sync(() => x.Quantity > 0))) {
+                var product = _products[client.DecisionRandom.Next(_products.Count)];
 
-                    var product = _context.Products
-                        .FirstOrDefault(x => x.Id == article);
-
-                    if (product == null) {
-                        Console.WriteLine("No");
-                    }
-                    else if (product.Quantity < amount) {
-                        Console.WriteLine("Less");
-                    }
-                    else {
-                        var cost = amount * product.Cost;
-
-                        product.Quantity -= amount;
-                        _context.SaveChanges();
-
-                        Console.WriteLine($"Cost: {cost}");
-                    }
+                if (_syncer.Sync(() => product.Quantity <= 0)) {
+                    continue;
                 }
+
+                _syncer.Enter();
+
+                if (client.Cash < product.Cost) {
+                    product = _products
+                        .Where(x => x.Quantity > 0)
+                        .OrderBy(x => x.Cost)
+                        .FirstOrDefault();
+
+                    if (client.Cash < product.Cost) {
+                        break;
+                    }
+
+                    client.Cash -= product.Cost;
+                    product.Quantity -= 1;
+                    continue;
+                }
+
+                client.Cash -= product.Cost;
+                product.Quantity -= 1;
 
                 _syncer.Exit();
             }
         }
 
-        private bool AnyRequests() {
-            _syncer.Enter();
-            var r = Requests.Count > 0;
-            _syncer.Exit();
-            return r;
+        public IEnumerator<Product> GetEnumerator() {
+            return _products.GetEnumerator();
         }
 
-        public void AddRequest(int amount, int article) {
-            _syncer.Enter();
-            Requests.Enqueue((amount, article));
-            _syncer.Exit();
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
+        public void PrintProducts() {
+            var name = Math.Max(7, _products.Max(x => x.Id.Length));
+            var cash = Math.Max(4, _products.Max(x => x.Cost.ToString().Length));
+            var quantity = Math.Max(10, _products.Max(x => x.Quantity.ToString().Length));
+
+            var nameLine = '═'.Repeat(name);
+            var cashLine = '═'.Repeat(cash);
+            var quantityLine = '═'.Repeat(quantity);
+
+            Console.WriteLine($"╔════════╦═{nameLine}═╦═{cashLine}═╦═{quantityLine}═╗");
+            Console.WriteLine($"║ №      ║ {O("Артикул", name)} ║ {O("Цена", cash)} ║ {O("Количество", quantity)} ║");
+            Console.WriteLine($"╠════════╬═{nameLine}═╬═{cashLine}═╬═{quantityLine}═╣");
+
+            var id = 0;
+
+            foreach (var x in _products) {
+                Console.WriteLine($"║ {id++,-6} ║ {O(x.Id, name)} ║ {O(x.Cost, cash)} ║ {O(x.Quantity, quantity)} ║");
+            }
+
+            Console.WriteLine($"╚════════╩═{nameLine}═╩═{cashLine}═╩═{quantityLine}═╝");
+        }
+
+        private static string O<T>(T i, int x) {
+            return i.ToString().PadRight(x);
         }
     }
 }

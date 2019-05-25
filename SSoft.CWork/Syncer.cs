@@ -9,5 +9,13 @@ namespace SSoft.CWork {
             Enter = enter;
             Exit = exit;
         }
+
+        public T Sync<T>(Func<T> action) {
+            Enter();
+            var result = action();
+            Exit();
+
+            return result;
+        }
     }
 }
