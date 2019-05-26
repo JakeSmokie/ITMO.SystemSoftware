@@ -26,18 +26,17 @@ namespace SSoft.CWork {
         }
 
         public void Add(Product product) {
+            product.Syncer = _syncer;
             _products.Add(product);
         }
 
         public void SellItems(Client client) {
-            while (client.Cash > 0 && _products.Any(x => _syncer.Sync(() => x.Quantity > 0))) {
+            while (client.Cash > 0 && _products.Any(x => x.Quantity > 0)) {
                 var product = _products[client.DecisionRandom.Next(_products.Count)];
 
-                if (_syncer.Sync(() => product.Quantity <= 0)) {
+                if (product.Quantity <= 0) {
                     continue;
                 }
-
-                _syncer.Enter();
 
                 if (client.Cash < product.Cost) {
                     product = _products
@@ -49,15 +48,18 @@ namespace SSoft.CWork {
                         break;
                     }
 
-                    client.Cash -= product.Cost;
-                    product.Quantity -= 1;
+                    if (product.Quantity > 0) {
+                        client.Cash -= product.Cost;
+                        product.Quantity -= 1;
+                    }
+
                     continue;
                 }
 
-                client.Cash -= product.Cost;
-                product.Quantity -= 1;
-
-                _syncer.Exit();
+                if (product.Quantity > 0) {
+                    client.Cash -= product.Cost;
+                    product.Quantity -= 1;
+                }
             }
         }
 

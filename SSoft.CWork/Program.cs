@@ -23,7 +23,7 @@ namespace SSoft.CWork {
                 () => semaphore.Release()
             );
 
-            var shop = new ShopMaintainer(criticalSectionsLocker) {
+            var shop = new ShopMaintainer(semaphoreLocker) {
                 new Product("Чай Липтон", 20, 300),
                 new Product("Колбаса", 40, 2000),
                 new Product("Булка", 4, 20000),
@@ -44,14 +44,12 @@ namespace SSoft.CWork {
             PrintClients(clients);
             shop.PrintProducts();
 
-            var tasks = clients
-                .Select(client => Task.Run(() => shop.SellItems(client)))
-                .ToArray();
-
-            Task.WaitAll(tasks);
+            Parallel.ForEach(clients, shop.SellItems);
 
             PrintClients(clients);
             shop.PrintProducts();
+
+            Console.ReadLine();
         }
 
         static void PrintClients(Client[] clients) {

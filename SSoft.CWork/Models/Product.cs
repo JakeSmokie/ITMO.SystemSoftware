@@ -2,9 +2,25 @@
 
 namespace SSoft.CWork {
     public class Product {
+        private int _quantity;
         public string Id { get; }
         public decimal Cost { get; }
-        public int Quantity { get; set; }
+        public Syncer Syncer { get; set; }
+
+        public int Quantity {
+            get { return Syncer.Sync(() => _quantity); }
+            set {
+                if (value < 0) {
+                    return;
+                }
+
+                Syncer?.Enter();
+                _quantity = value;
+                Syncer?.Exit();
+            }
+        }
+
+
 
         public Product(string id, decimal cost, int quantity) {
             Id = id;
