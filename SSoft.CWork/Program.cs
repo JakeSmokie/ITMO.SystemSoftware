@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SSoft.CWork.Tools;
 
 namespace SSoft.CWork {
-    class Program {
-        static void Main(string[] args) {
+    internal class Program {
+        private static void Main(string[] args) {
             var syncObject = new object();
             var semaphore = new SemaphoreSlim(1, 1);
 
@@ -24,10 +21,10 @@ namespace SSoft.CWork {
             );
 
             var shop = new ShopMaintainer(semaphoreLocker) {
-                new Product("Чай Липтон", 20, 300),
-                new Product("Колбаса", 40, 2000),
-                new Product("Булка", 4, 20000),
-                new Product("Сырок", 1, 1000000),
+                new Product("Чай Липтон", 20, 30),
+                new Product("Колбаса", 40, 20),
+                new Product("Булка", 4, 20),
+                new Product("Сырок", 1, 10)
             };
 
             var clients = new[] {
@@ -38,7 +35,7 @@ namespace SSoft.CWork {
                 new Client("Jake", 1000000),
                 new Client("Tyler", 2000000),
                 new Client("Harry", 6000000),
-                new Client("Jeffrey", 8000000),
+                new Client("Jeffrey", 8000000)
             };
 
             PrintClients(clients);
@@ -52,7 +49,7 @@ namespace SSoft.CWork {
             Console.ReadLine();
         }
 
-        static void PrintClients(Client[] clients) {
+        private static void PrintClients(Client[] clients) {
             var name = Math.Max(3, clients.Max(x => x.Name.Length));
             var cash = Math.Max(6, clients.Max(x => x.Cash.ToString().Length));
 

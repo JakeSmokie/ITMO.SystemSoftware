@@ -1,31 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace SSoft.CWork {
+﻿namespace SSoft.CWork {
     public class Product {
         private int _quantity;
-        public string Id { get; }
-        public decimal Cost { get; }
-        public Syncer Syncer { get; set; }
-
-        public int Quantity {
-            get { return Syncer.Sync(() => _quantity); }
-            set {
-                if (value < 0) {
-                    return;
-                }
-
-                Syncer?.Enter();
-                _quantity = value;
-                Syncer?.Exit();
-            }
-        }
-
 
 
         public Product(string id, decimal cost, int quantity) {
             Id = id;
             Cost = cost;
             Quantity = quantity;
+        }
+
+        public string Id { get; }
+        public decimal Cost { get; }
+        public Syncer Syncer { get; set; }
+
+        public int Quantity {
+            get { return _quantity; }
+            set {
+                if (value < 0) {
+                    return;
+                }
+
+                _quantity = value;
+            }
         }
 
         public override string ToString() {

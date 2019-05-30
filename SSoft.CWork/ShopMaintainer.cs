@@ -5,24 +5,20 @@ using System.Linq;
 using SSoft.CWork.Tools;
 
 namespace SSoft.CWork {
-    public class Request {
-        public int Amount { get; set; }
-        public int Article { get; set; }
-        public Action<float, string> ResponseAction { get; set; }
-
-        public void Deconstruct(out int amount, out int article, out Action<float, string> responseAction) {
-            amount = Amount;
-            article = Article;
-            responseAction = ResponseAction;
-        }
-    }
-
     public class ShopMaintainer : IEnumerable<Product> {
-        private readonly Syncer _syncer;
         private readonly List<Product> _products = new List<Product>();
+        private readonly Syncer _syncer;
 
         public ShopMaintainer(Syncer syncer) {
             _syncer = syncer;
+        }
+
+        public IEnumerator<Product> GetEnumerator() {
+            return _products.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
         }
 
         public void Add(Product product) {
@@ -32,9 +28,11 @@ namespace SSoft.CWork {
 
         public void SellItems(Client client) {
             while (client.Cash > 0 && _products.Any(x => x.Quantity > 0)) {
+                _syncer.Enter();
                 var product = _products[client.DecisionRandom.Next(_products.Count)];
 
                 if (product.Quantity <= 0) {
+                    _syncer.Exit();
                     continue;
                 }
 
@@ -45,6 +43,7 @@ namespace SSoft.CWork {
                         .FirstOrDefault();
 
                     if (client.Cash < product.Cost) {
+                        _syncer.Exit();
                         break;
                     }
 
@@ -53,6 +52,7 @@ namespace SSoft.CWork {
                         product.Quantity -= 1;
                     }
 
+                    _syncer.Exit();
                     continue;
                 }
 
@@ -60,15 +60,9 @@ namespace SSoft.CWork {
                     client.Cash -= product.Cost;
                     product.Quantity -= 1;
                 }
+
+                _syncer.Exit();
             }
-        }
-
-        public IEnumerator<Product> GetEnumerator() {
-            return _products.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() {
-            return GetEnumerator();
         }
 
         public void PrintProducts() {
